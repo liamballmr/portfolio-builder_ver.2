@@ -1,3 +1,8 @@
+[build.environment]
+# NEXT_PUBLIC_* values are intentionally inlined into the client bundle by Next.js.
+# The Supabase anon key is a public key protected by row-level security policies.
+SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY"
+
 [[headers]]
 for = "/_next/static/*"
 
