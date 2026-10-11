@@ -610,7 +610,7 @@ export default function PortfolioReader({ content, demo = false }: { content: Po
           <div
             className="mobile-page-swipe"
             role="region"
-            aria-label="Swipe here to turn pages"
+            aria-label="Drag here to turn pages"
             onPointerDown={(event) => {
               event.currentTarget.setPointerCapture(event.pointerId);
               touchStartX.current = event.clientX;
@@ -626,7 +626,7 @@ export default function PortfolioReader({ content, demo = false }: { content: Po
             }}
             onPointerCancel={() => { touchStartX.current = null; }}
           >
-            <span>SWIPE HERE TO TURN PAGES</span>
+            <span>DRAG HERE TO TURN PAGES</span>
           </div>
         )}
 
