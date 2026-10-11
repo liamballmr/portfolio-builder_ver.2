@@ -33,7 +33,7 @@
 
 若首次登入顯示帳號未指派，請確認 `.env.local` 的郵件完全符合 Supabase Auth 帳號，並重新檢查第 3 步的 UUID。修改 `.env.local` 後需重新啟動 Next.js。
 
-正式部署時，將同樣三個環境變數設定在 Netlify 的環境設定中；不要提交任何金鑰。Netlify 上線前須另外驗證 Next.js App Router、Server Actions、`sharp` 圖片處理、檔案上傳限制及 Supabase 回呼網址設定。
+正式部署時，將同樣三個環境變數設定在 Netlify 的環境設定中；不要提交任何金鑰。此專案的 `netlify.toml` 只將 `NEXT_PUBLIC_SUPABASE_ANON_KEY` 從 Netlify Secrets Scanning 的掃描結果中排除，因為 Supabase anon／publishable key 是設計上會公開的用戶端金鑰；其他秘密掃描仍保持啟用。此設定只適用於該環境變數確實存放 anon／publishable key 的情況，絕不可放入 `service_role` key 或資料庫密碼。提交 `netlify.toml` 後需觸發新的 Production deploy。Netlify 上線前須另外驗證 Next.js App Router、Server Actions、`sharp` 圖片處理、檔案上傳限制及 Supabase 回呼網址設定。
 
 網站定位為「Liam 的線上作品集書」：訪客以翻書方式看作品，Liam 在私人後台編輯；按下發佈後更新內容，無須重新部署。
 
