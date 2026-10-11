@@ -87,8 +87,10 @@ button:focus-visible, a:focus-visible, select:focus-visible, [tabindex="0"]:focu
 .reader__hint { letter-spacing: .04em; text-transform: none; font: 12px var(--serif); }
 
 .book-stage {
+  --book-page-ratio: 1.41421356237;
+  --book-height: min(66svh, 710px);
   width: min(100%, 1180px);
-  height: min(66svh, 710px);
+  height: var(--book-height);
   min-height: 460px;
   position: relative;
   display: flex;
@@ -97,7 +99,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, [tabindex="0"]:focu
 }
 
 .book {
-  width: min(100%, 670px);
+  width: min(100%, calc(var(--book-height) * var(--book-page-ratio)));
   height: 100%;
   position: relative;
   display: flex;
@@ -106,7 +108,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, [tabindex="0"]:focu
   outline: none;
 }
 
-.book--spread { width: min(100%, 1080px); }
+.book--spread { width: min(100%, calc(var(--book-height) * var(--book-page-ratio) * 2)); }
 .book--single { border-radius: 2px; }
 .book--spread::after {
   content: "";
