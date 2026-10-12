@@ -91,7 +91,7 @@ export const DEFAULT_CONTENT: PortfolioContent = {
     name: "Liam",
     bookTitle: "Portfolio",
     descriptor: "Independent practice · 2026",
-    coverTitle: "Selected work,\nthoughtfully made.",
+    coverTitle: "Selected work, thoughtfully made.",
     coverIntro: "A collection of ideas, experiments, and outcomes.",
     year: "2026",
     coverAssetId: "",
