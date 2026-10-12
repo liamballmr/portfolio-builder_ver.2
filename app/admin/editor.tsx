@@ -351,6 +351,7 @@ function Preview({
   const assetMap = useMemo(() => new Map(assets.map((asset) => [asset.id, asset])), [assets]);
   const displayed = chapter ?? content.chapters[0];
   const attached = displayed?.assetIds.map((id) => assetMap.get(id)).filter((asset): asset is PortfolioAsset => Boolean(asset)) ?? [];
+  const previewHasVideo = displayed?.type === "video" && Boolean(displayed.externalUrl && safePreviewUrl(displayed.externalUrl));
   useEffect(() => {
     const element = previewRef.current;
     if (!element) return;
@@ -381,19 +382,30 @@ function Preview({
           <span>{content.profile.name} · {content.profile.descriptor}</span>
         </div>
       ) : displayed ? (
-        <article className="editor-preview__page">
+        <article className={`editor-preview__page editor-preview__page--${displayed.type}`}>
           <span className="page-eyebrow">{displayed.eyebrow}</span>
           <h2>{displayed.title}</h2>
           {displayed.section === "project" && <p className="editor-preview__meta">{displayed.year} · {displayed.role}</p>}
-          {displayed.summary && <p className="editor-preview__summary">{displayed.summary}</p>}
-          {attached.map((asset) => asset.signedUrl && (
-            <figure key={asset.id}>
-              <img src={asset.signedUrl} alt={asset.altText} style={{ objectPosition: `${asset.focusX}% ${asset.focusY}%` }} />
-              {asset.caption && <figcaption>{asset.caption}</figcaption>}
-            </figure>
-          ))}
-          <RichText document={displayed.body} />
-          {displayed.externalUrl && safePreviewUrl(displayed.externalUrl) && <a href={displayed.externalUrl} target={displayed.externalUrl.startsWith("https://") ? "_blank" : undefined} rel="noreferrer">{displayed.externalUrl}</a>}
+          <div className={`page-body editor-preview__body page-body--${displayed.type} ${attached.length || displayed.type === "video" ? "page-body--with-art" : ""}`}>
+            <div className="page-copy">
+              {displayed.summary && <p className="editor-preview__summary">{displayed.summary}</p>}
+              <RichText document={displayed.body} />
+              {displayed.externalUrl && safePreviewUrl(displayed.externalUrl) && displayed.type !== "video" && <a href={displayed.externalUrl} target={displayed.externalUrl.startsWith("https://") ? "_blank" : undefined} rel="noreferrer">{displayed.externalUrl}</a>}
+            </div>
+            {(attached.length > 0 || previewHasVideo) && (
+              <div className={`page-media ${attached.length + Number(previewHasVideo) === 1 ? "page-media--single" : ""}`}>
+                {previewHasVideo && displayed.externalUrl && (
+                  <a className="editor-preview__video" href={displayed.externalUrl} target="_blank" rel="noreferrer">VIDEO PREVIEW ↗<span>{displayed.externalUrl}</span></a>
+                )}
+                {attached.map((asset) => asset.signedUrl && (
+                  <figure key={asset.id}>
+                    <img src={asset.signedUrl} alt={asset.altText} style={{ objectPosition: `${asset.focusX}% ${asset.focusY}%` }} />
+                    {asset.caption && <figcaption>{asset.caption}</figcaption>}
+                  </figure>
+                ))}
+              </div>
+            )}
+          </div>
         </article>
       ) : <p className="admin-empty">No preview available.</p>}
       <span className="editor-preview__page-number">PREVIEW · NOT PUBLIC</span>

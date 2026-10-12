@@ -316,12 +316,15 @@ function PageContent({
     );
   }
 
+  const hasVideo = page.kind === "chapter" && page.style === "video" && Boolean(page.note && safeExternalUrl(page.note));
+  const hasMedia = page.assets.length > 0 || hasVideo;
+
   return (
     <article className="page-content">
       <span className="page-eyebrow">{page.eyebrow}</span>
       <h2>{page.title.split("\n").map((line) => <span key={line}>{line}</span>)}</h2>
       {page.section === "project" && page.kind === "chapter" && <p className="public-page-meta">{page.year} · {page.role}</p>}
-      <div className={`page-body ${page.assets.length ? "page-body--with-art" : ""} ${page.kind === "contact" ? "page-body--contact" : ""} ${page.style ? `page-body--${page.style}` : ""}`}>
+      <div className={`page-body ${page.assets.length || page.style === "video" ? "page-body--with-art" : ""} ${page.kind === "contact" ? "page-body--contact" : ""} ${page.style ? `page-body--${page.style}` : ""}`}>
         <div className="page-copy">
           {page.intro && <p>{page.intro}</p>}
           {page.body && <RichText document={page.body} />}
@@ -329,8 +332,12 @@ function PageContent({
           {page.kind === "contact" && page.links?.filter((link) => safeExternalUrl(link.url)).map((link) => <p key={link.id}><a href={link.url} target={link.url.startsWith("https://") ? "_blank" : undefined} rel="noreferrer">{link.label} ↗</a></p>)}
           {page.kind === "chapter" && page.note && safeExternalUrl(page.note) && page.style !== "video" && <p><a href={page.note} target={page.note.startsWith("https://") ? "_blank" : undefined} rel="noreferrer">View related work ↗</a></p>}
         </div>
-        {page.kind === "chapter" && page.style === "video" && page.note && safeExternalUrl(page.note) && <VideoEmbed url={page.note} title={page.title} />}
-        {page.assets.map((image) => <Artwork key={`${page.id}-${image.src}`} image={image} onOpen={onOpenImage} full={page.style === "full-image" || page.assets.length === 1} />)}
+        {hasMedia && (
+          <div className={`page-media ${page.assets.length + Number(hasVideo) === 1 ? "page-media--single" : ""}`}>
+            {hasVideo && page.note && <VideoEmbed url={page.note} title={page.title} />}
+            {page.assets.map((image) => <Artwork key={`${page.id}-${image.src}`} image={image} onOpen={onOpenImage} full={page.style === "full-image" || page.assets.length === 1} />)}
+          </div>
+        )}
       </div>
     </article>
   );
